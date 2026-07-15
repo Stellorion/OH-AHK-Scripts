@@ -26,6 +26,12 @@ RecordStartTime := 0
 MacroIndex := 0
 ; -------------------------------
 
+; Global Search Vars
+; -------------------------------
+global GSearchHistory := []
+global historyIndex := 0
+; -------------------------------
+
 ; List of Shortcuts
 ; -------------------------------
 AllShortcuts := Map()
@@ -144,7 +150,7 @@ TimeGui := Gui(, "AHK Timer")
 TimeGui.BackColor := "0B090A"
 TimeGui.SetFont("s10 cWhite", "Segoe UI")
 
-; SW GUI
+; Stop Watch GUI
 ; -------------------------------
 TimeGui.SetFont("s18 Bold cF5F3F4", "Segoe UI")
 TimeGui.Add("Text", "x10 Center w400 h35 cWhite", "STOPWATCHES")
@@ -176,7 +182,7 @@ Diff_Display := TimeGui.Add("Text", "x10 y+15 h25 Center w400", "Diff: 00:00.00"
 TimeGui.Add("Text", "x0 h0 w422 0x10") ; Separator line
 ; -------------------------------
 
-; CD GUI
+; Count Down GUI
 ; -------------------------------
 TimeGui.SetFont("s18 Bold cWhite", "Segoe UI")
 TimeGui.Add("Text", "x10 y+20 Center h35 w400", "COUNTDOWNS")
@@ -286,6 +292,19 @@ MacroList.ModifyCol(2, 259)
 BtnExport  := AutomatorGui.Add("Button", "x20 y+10 w185 h35 cBlack", "Export (CSV)")
 BtnImport  := AutomatorGui.Add("Button", "x+10 w185 h35 cBlack", "Import (CSV)")
 
+; ===============================
+
+
+; Global Search GUI
+; ===============================
+GSearchGui := Gui("+AlwaysOnTop -Caption +Border", "AHK Global Search")
+GSearchGui.BackColor := "1E1E1E"
+
+; Search Bar
+; -------------------------------
+GSearchGui.SetFont("s12 cBlack", "Segoe UI")
+GSearchInput := GSearchGui.Add("Edit", "w500 vSearchQuery -WantReturn")
+GSearchInput.OnEvent("Focus", (*) => Send("^a"))
 ; ===============================
 
 
@@ -514,6 +533,22 @@ CapsLock & x:: StopActions()
 CapsLock & c:: StartRecording()
 CapsLock & v:: PlayMacro()
 ; -------------------------------
+
+; Global Search Shortcuts
+; -------------------------------
+; -- Toggle Visibility --
+CapsLock & f::
+{
+    if WinActive("ahk_id " GSearchGui.Hwnd) {
+        GSearchGui.Hide()
+    } else {
+        GSearchInput.Value := ""
+        GSearchGui.Show("")
+        historyIndex := 0 
+    }
+}
+; -------------------------------
+
 ; ===============================
 
 
@@ -523,6 +558,7 @@ CapsLock & v:: PlayMacro()
 #Include Timer.ahk
 #Include FileExplorer.ahk
 #Include Automator.ahk
+#Include GlobalSearch.ahk
 ; -------- Libraries ------------
 ; Source: https://github.com/Descolada/AHK-v2-libraries
 ; Copyright (c) 2023 Descolada
