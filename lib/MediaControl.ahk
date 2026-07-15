@@ -569,3 +569,32 @@ class Media {
         Return CLSID
     }
 }
+
+; -- Jump forward/backward (seconds) in a Media --
+SkipMedia(seconds) {
+    try {
+        session := Media.GetCurrentSession()
+        
+        ; Check the current state (Status 4 means "Playing")
+        wasPlaying := (session.PlaybackStatus == 4)
+        
+        ; If it is playing, pause it to force the timeline sync
+        if (wasPlaying) {
+            session.Pause()
+            Sleep 50
+        }
+        
+        ; Fetch the newly synced data and make the jump
+        session.UpdateTimelineProperties()
+        session.ChangePlaybackPosition(Min(session.EndTime, session.Position + seconds))
+        
+        ; Explicitly tell it to play ONLY if it was playing to begin with
+        if (wasPlaying) {
+            Sleep 50
+            session.Play()
+        }
+    } 
+    catch {
+        ; Do nothing
+    }
+}

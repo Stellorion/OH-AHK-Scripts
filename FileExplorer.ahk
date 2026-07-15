@@ -10,8 +10,8 @@ CapsLock & 2:: ExplorerJump(A_Desktop . "\Softwares")
 CapsLock & 3:: ExplorerJump(A_Desktop)
 ; -- Downloads --
 CapsLock & 4:: ExplorerJump(EnvGet("USERPROFILE") . "\Downloads")
-; -- MyPc --
-CapsLock & 5:: ExplorerJump("shell:::{20D04FE0-3AEA-1069-A2D8-08002B30309D}")
+; -- Pictures --
+CapsLock & 5:: ExplorerJump(EnvGet("USERPROFILE") . "\Pictures")
 
 ; -- Jump to Parent --
 CapsLock & Tab:: Send("!{Up}")

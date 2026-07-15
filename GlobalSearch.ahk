@@ -63,6 +63,26 @@ Down:: {
 
 #HotIf
 
+; -- Helper Function to Find and Run Matches --
+FindFirstAndRun(directory, searchPattern, foldersOnly := false) {
+    if (searchPattern = "") {
+        ; If nothing was typed after the prefix, just open the root directory
+        Run(directory)
+        return
+    }
+
+    ; Find and launch the first matching file/folder.
+    loop Files, directory "\*" , (foldersOnly ? "D" : "FD") {
+        if (InStr(A_LoopFileName, searchPattern)) { ; (case-insensitive)
+            Run(A_LoopFilePath)
+            return
+        }
+    }
+    
+    ; If nothing is found play a beep
+    SoundBeep(1000, 150)
+}
+
 ; --- Search Logic Engine ---
 ExecuteSearch(query) {
     query := Trim(query)
@@ -70,7 +90,7 @@ ExecuteSearch(query) {
         return
 
     ; 1. Youtube Web Search ("yt:")
-    else if (SubStr(query, 1, 3) = "yt:") {
+    if (SubStr(query, 1, 3) = "yt:") {
         rawQuery := Trim(SubStr(query, 4))
         encodedQuery := StrReplace(rawQuery, " ", "%20")
         Run("https://www.youtube.com/results?search_query=" encodedQuery)
@@ -78,14 +98,29 @@ ExecuteSearch(query) {
 
     ; 2. Spotify Web Search ("sp:")
     else if (SubStr(query, 1, 3) = "sp:") {
-        rawQuery := Trim(SubStr(query, 3))
+        rawQuery := Trim(SubStr(query, 4))
         encodedQuery := StrReplace(rawQuery, " ", "%20")
         Run("https://open.spotify.com/search/" encodedQuery)
     }
 
-    ; 3. Default Fallback (Normal Google Search)
+    ; 3. Run a Game ("rg:")
+    else if (SubStr(query, 1, 3) = "rg:") {
+        rawQuery := Trim(SubStr(query, 4))
+        gamesDir := A_Desktop "\games"
+        FindFirstAndRun(gamesDir, rawQuery)
+    }
+
+    ; 4. Run a Software ("rs:")
+    else if (SubStr(query, 1, 3) = "rs:") {
+        rawQuery := Trim(SubStr(query, 4))
+        softwareDir := A_Desktop "\softwares"
+        FindFirstAndRun(softwareDir, rawQuery)
+    }
+
+    ; 5. Default (Brave Search)
     else {
         encodedQuery := StrReplace(query, " ", "%20")
         Run("https://search.brave.com/search?q=" encodedQuery)
     }
 }
+

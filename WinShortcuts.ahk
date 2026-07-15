@@ -94,7 +94,7 @@ AllShortcuts["File Explorer"] := [
     ["Software", "CapsLock + 2"],
     ["Desktop", "CapsLock + 3"],
     ["Downloads", "CapsLock + 4"],
-    ["My PC", "CapsLock + 5"],
+    ["Pictures", "CapsLock + 5"],
     ["Jump to Parent", "CapsLock + Tab"],
     ["Copy File Path", "Ctrl + Alt + C"],
     ["Create Shortcut", "Alt + Left Click"],
@@ -111,9 +111,10 @@ AllShortcuts["Media Control"] := [
 
 AllShortcuts["Global Search"] := [
     ["History Navigation", "Up/Down Arrow"],
-    ["Search On Web", " "],
-    ["Search On Spotify", "sp:"],
     ["Search On Youtube", "yt:"],
+    ["Search On Spotify", "sp:"],
+    ["Run a Software", "rs:"],
+    ["Run a Game", "rg:"],
 ]
 ; ===============================
 
@@ -406,65 +407,20 @@ CapsLock & a::
 }
 
 ; -- Jump Backward 5s --
-CapsLock & q:: {
-    try {
-        session := Media.GetCurrentSession()
-        
-        ; Check the current state (Status 4 means "Playing")
-        wasPlaying := (session.PlaybackStatus == 4)
-        
-        ; If it is playing, pause it to force the timeline sync
-        if (wasPlaying) {
-            session.Pause()
-            Sleep 50
-        }
-        
-        ; Fetch the newly synced data and make the jump
-        session.UpdateTimelineProperties()
-        session.ChangePlaybackPosition(Max(0, session.Position - 5))
-        
-        ; Explicitly tell it to play ONLY if it was playing to begin with
-        if (wasPlaying) {
-            Sleep 50
-            session.Play()
-        }
-    } 
-    catch {
-        ; Do nothing
-    }
+CapsLock & q:: 
+{
+    SkipMedia(-5)
 }
 
 ; -- Jump Forward 5s --
-CapsLock & e:: {
-    try {
-        session := Media.GetCurrentSession()
-        
-        ; Check the current state (Status 4 means "Playing")
-        wasPlaying := (session.PlaybackStatus == 4)
-        
-        ; If it is playing, pause it to force the timeline sync
-        if (wasPlaying) {
-            session.Pause()
-            Sleep 50
-        }
-        
-        ; Fetch the newly synced data and make the jump
-        session.UpdateTimelineProperties()
-        session.ChangePlaybackPosition(Min(session.EndTime, session.Position + 5))
-        
-        ; Explicitly tell it to play ONLY if it was playing to begin with
-        if (wasPlaying) {
-            Sleep 50
-            session.Play()
-        }
-    } 
-    catch {
-        ; Do nothing
-    }
+CapsLock & e:: 
+{
+    SkipMedia(5)
 }
 
 ; -- Jump To Start --
-CapsLock & r:: {
+CapsLock & r:: 
+{
     try {
         session := Media.GetCurrentSession()
         session.ChangePlaybackPosition(session.StartTime)
@@ -475,7 +431,8 @@ CapsLock & r:: {
 }
 
 ; -- Jump To End --
-CapsLock & t:: {
+CapsLock & t:: 
+{
     try {
         session := Media.GetCurrentSession()
         session.ChangePlaybackPosition(session.EndTime)
