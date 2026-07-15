@@ -44,7 +44,7 @@ AllShortcuts["Main List"] := [
     ["AutoClicker", "4"],
     ["File Explorer", "5"],
     ["Media Control", "6"],
-    [],
+    ["Global Search", "7"],
 ]
 
 AllShortcuts["Windows"] := [
@@ -107,6 +107,13 @@ AllShortcuts["Media Control"] := [
     ["Prev/Next", "CapsLock + A/D"],
     ["Jump To Start", "CapsLock + T"],
     ["Jump To End", "CapsLock + R"],
+]
+
+AllShortcuts["Global Search"] := [
+    ["History Navigation", "Up/Down Arrow"],
+    ["Search On Web", " "],
+    ["Search On Spotify", "sp:"],
+    ["Search On Youtube", "yt:"],
 ]
 ; ===============================
 
@@ -339,6 +346,7 @@ SetCapsLockState "AlwaysOff"
 4:: SwitchList("AutoClicker")
 5:: SwitchList("File Explorer")
 6:: SwitchList("Media Control")
+7:: SwitchList("Global Search")
 Escape:: MyGui.Hide()
 #HotIf
 
