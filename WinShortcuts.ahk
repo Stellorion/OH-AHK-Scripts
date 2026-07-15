@@ -44,6 +44,7 @@ AllShortcuts["Main List"] := [
     ["AutoClicker", "4"],
     ["File Explorer", "5"],
     ["Media Control", "6"],
+    [],
 ]
 
 AllShortcuts["Windows"] := [
